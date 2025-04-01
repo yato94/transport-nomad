@@ -33,6 +33,19 @@ class HandleTeamInvitationAfterLogin
             
             // Check if the invitation exists and belongs to the logged-in user
             if ($invitation && $invitation->email === $event->user->email) {
+                // Check if the action is to decline the invitation
+                if ($request->has('action') && $request->input('action') === 'decline') {
+                    // Delete the invitation
+                    $invitation->delete();
+                    
+                    // Add a success message to the session
+                    Session::flash('status', __('You have declined the invitation to join the :team team.', ['team' => $invitation->team->name]));
+                    
+                    // Redirect to the decline confirmation page
+                    return;
+                }
+                
+                // Otherwise, process as an acceptance
                 // Get the user's current teams
                 $currentTeams = $event->user->allTeams();
                 

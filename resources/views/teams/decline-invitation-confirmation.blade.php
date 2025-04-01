@@ -14,31 +14,24 @@
                     </h3>
 
                     <div class="mt-4 text-sm text-gray-600">
-                        <p class="mb-4">
-                            {{ __('You are currently a member of the :team team.', ['team' => $currentTeam->name]) }}
-                        </p>
                         <p class="mb-4 font-bold text-red-600">
-                            {{ __('If you accept this invitation, you will be removed from your current team and added to the :team team.', ['team' => $invitation->team->name]) }}
-                        </p>
-                        <p>
-                            {{ __('Are you sure you want to accept this invitation?') }}
+                            {{ __('Are you sure you want to decline this invitation?') }}
                         </p>
                     </div>
 
                     <div class="mt-6 flex items-center">
-                        <form method="POST" action="{{ route('team-invitations.accept-with-confirmation.post', $invitation) }}">
-                            @csrf
-                            <x-button>
-                                {{ __('Accept Invitation') }}
-                            </x-button>
-                        </form>
-
-                        <form method="POST" action="{{ route('team-invitations.decline.post', $invitation) }}" class="ml-3">
+                        <form method="POST" action="{{ route('team-invitations.decline.post', $invitation) }}">
                             @csrf
                             <x-button class="bg-red-500 hover:bg-red-700">
                                 {{ __('Decline Invitation') }}
                             </x-button>
                         </form>
+
+                        <a href="{{ route('dashboard') }}" class="ml-3">
+                            <x-button type="button">
+                                {{ __('Cancel') }}
+                            </x-button>
+                        </a>
                     </div>
                 </div>
             </div>

@@ -25,8 +25,12 @@ class TeamInvitationController extends Controller
             $userExists = \App\Models\User::where('email', $invitation->email)->exists();
             
             if ($userExists) {
-                // If the user exists, redirect to login page with invitation
-                return redirect()->route('login', ['invitation' => $invitation->id, 'email' => $invitation->email]);
+                // If the user exists, redirect to login page with invitation and action=accept
+                return redirect()->route('login', [
+                    'invitation' => $invitation->id, 
+                    'email' => $invitation->email,
+                    'action' => 'accept'
+                ]);
             } else {
                 // If the user doesn't exist, redirect to register page with invitation
                 return redirect()->route('register', ['invitation' => $invitation->id, 'email' => $invitation->email]);
@@ -81,8 +85,12 @@ class TeamInvitationController extends Controller
             $userExists = \App\Models\User::where('email', $invitation->email)->exists();
             
             if ($userExists) {
-                // If the user exists, redirect to login page with invitation
-                return redirect()->route('login', ['invitation' => $invitation->id, 'email' => $invitation->email]);
+                // If the user exists, redirect to login page with invitation and action=accept
+                return redirect()->route('login', [
+                    'invitation' => $invitation->id, 
+                    'email' => $invitation->email,
+                    'action' => 'accept'
+                ]);
             } else {
                 // If the user doesn't exist, redirect to register page with invitation
                 return redirect()->route('register', ['invitation' => $invitation->id, 'email' => $invitation->email]);
@@ -132,6 +140,43 @@ class TeamInvitationController extends Controller
     }
 
     /**
+     * Show confirmation page for declining a team invitation.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\TeamInvitation  $invitation
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
+    public function declineWithConfirmation(Request $request, TeamInvitation $invitation)
+    {
+        // If the user is not logged in, check if they already have an account
+        if (!$request->user()) {
+            // Check if a user with this email already exists
+            $userExists = \App\Models\User::where('email', $invitation->email)->exists();
+            
+            if ($userExists) {
+                // If the user exists, redirect to login page with invitation and action=decline
+                return redirect()->route('login', [
+                    'invitation' => $invitation->id, 
+                    'email' => $invitation->email,
+                    'action' => 'decline'
+                ]);
+            } else {
+                // If the user doesn't exist, redirect to register page with invitation
+                return redirect()->route('register', ['invitation' => $invitation->id, 'email' => $invitation->email]);
+            }
+        }
+
+        // If the logged-in user's email doesn't match the invitation email
+        if ($request->user()->email !== $invitation->email) {
+            throw new AuthorizationException;
+        }
+
+        return view('teams.decline-invitation-confirmation', [
+            'invitation' => $invitation,
+        ]);
+    }
+
+    /**
      * Decline a team invitation.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -146,8 +191,12 @@ class TeamInvitationController extends Controller
             $userExists = \App\Models\User::where('email', $invitation->email)->exists();
             
             if ($userExists) {
-                // If the user exists, redirect to login page with invitation
-                return redirect()->route('login', ['invitation' => $invitation->id, 'email' => $invitation->email]);
+                // If the user exists, redirect to login page with invitation and action=decline
+                return redirect()->route('login', [
+                    'invitation' => $invitation->id, 
+                    'email' => $invitation->email,
+                    'action' => 'decline'
+                ]);
             } else {
                 // If the user doesn't exist, redirect to register page with invitation
                 return redirect()->route('register', ['invitation' => $invitation->id, 'email' => $invitation->email]);
@@ -157,6 +206,20 @@ class TeamInvitationController extends Controller
         // If the logged-in user's email doesn't match the invitation email
         if ($request->user()->email !== $invitation->email) {
             throw new AuthorizationException;
+        }
+
+        // For POST requests, check if we have signature parameters
+        if ($request->has('signature') && $request->has('expires')) {
+            // Recreate the signed URL parameters
+            $request->query->add([
+                'signature' => $request->input('signature'),
+                'expires' => $request->input('expires')
+            ]);
+            
+            // Check if the signature is valid
+            if (!$request->hasValidSignature()) {
+                throw new AuthorizationException;
+            }
         }
 
         $invitation->delete();

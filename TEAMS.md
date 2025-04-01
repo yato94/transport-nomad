@@ -59,32 +59,50 @@ Users can create additional teams, but with restrictions:
 Team owners can invite users to their team:
 
 1. The `InviteTeamMember` action creates a new invitation record
-2. An email is sent to the invitee with a signed URL to accept the invitation
+2. An email is sent to the invitee with a signed URL to accept or decline the invitation
 3. Different email templates are used for existing users vs. new users
+4. For existing users, the email includes both "Accept Invitation & Switch Teams" and "Decline Invitation" buttons
 
 ### Accepting Invitations
 
-When a user clicks on an invitation link:
+When a user clicks on the "Accept Invitation" link:
 
 1. The `TeamInvitationController` handles the request
 2. If the user is not logged in:
    - The system checks if the email already exists in the database
-   - If the user exists, they are redirected to the login page with the invitation ID
+   - If the user exists, they are redirected to the login page with the invitation ID and action=accept
    - If the user doesn't exist, they are redirected to the registration page with the invitation ID
 3. For logged-in users:
-   - The system verifies that the invitation email matches the user's email
-   - The user is removed from all their current teams
+   - The system shows a confirmation page asking if they want to switch teams
+   - If they confirm, the user is removed from all their current teams
    - The user is added to the invited team
    - The user's current team is switched to the new team
    - The invitation is deleted
+
+### Declining Invitations
+
+When a user clicks on the "Decline Invitation" link:
+
+1. The `TeamInvitationController` handles the request
+2. If the user is not logged in:
+   - The system checks if the email already exists in the database
+   - If the user exists, they are redirected to the login page with the invitation ID and action=decline
+   - If the user doesn't exist, they are redirected to the registration page with the invitation ID
+3. For logged-in users:
+   - The system shows a confirmation page asking if they want to decline the invitation
+   - If they confirm, the invitation is deleted without changing their team membership
+   - The user remains in their current team
 
 ### Handling Invitations After Login
 
 When a user logs in with an invitation ID:
 
 1. The `HandleTeamInvitationAfterLogin` listener is triggered
-2. It checks if there's an invitation ID in the request
-3. If an invitation exists and belongs to the user:
+2. It checks if there's an invitation ID and action parameter in the request
+3. If the action is 'decline':
+   - The invitation is deleted without changing team membership
+   - A success message is shown to the user
+4. If the action is 'accept' or not specified:
    - The user is removed from all their current teams
    - The user is added to the invited team
    - The user's current team is switched to the new team
@@ -94,13 +112,15 @@ When a user logs in with an invitation ID:
 
 When a user registers with an invitation ID:
 
-1. The `CreateNewUser` action checks for an invitation ID
-2. If an invitation exists and belongs to the user:
-   - The user is removed from any teams they might have
+1. The `CreateNewUser` action checks for an invitation ID and action parameter
+2. If the action is 'decline':
+   - The invitation is deleted without adding the user to the team
+   - A personal team is created for the user
+3. If the action is 'accept' or not specified:
    - The user is added to the invited team
    - The user's current team is switched to the new team
    - The invitation is deleted
-3. No personal team is created for the user
+   - No personal team is created for the user
 
 ## Team Membership Management
 
@@ -170,9 +190,12 @@ The UI has been modified to enforce the single-team policy:
 ### Views
 
 - `resources/views/navigation-menu.blade.php`: Modified to remove team switching UI
-- `resources/views/auth/login.blade.php`: Modified to handle invitation parameters
-- `resources/views/auth/register.blade.php`: Modified to handle invitation parameters
+- `resources/views/auth/login.blade.php`: Modified to handle invitation and action parameters
+- `resources/views/auth/register.blade.php`: Modified to handle invitation and action parameters
+- `resources/views/teams/accept-invitation-confirmation.blade.php`: Confirmation page for accepting team invitations
+- `resources/views/teams/decline-invitation-confirmation.blade.php`: Confirmation page for declining team invitations
 - `resources/views/teams/team-member-manager.blade.php`: Modified to handle null membership cases
+- `resources/views/emails/team-invitation-existing-user.blade.php`: Email template for invitations to existing users with accept and decline buttons
 
 ### Policies
 

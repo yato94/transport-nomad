@@ -18,6 +18,10 @@
             @if (request()->has('invitation'))
                 <input type="hidden" name="invitation" value="{{ request('invitation') }}" />
             @endif
+            
+            @if (request()->has('action'))
+                <input type="hidden" name="action" value="{{ request('action') }}" />
+            @endif
 
             <div>
                 <x-label for="email" value="{{ __('Email') }}" />

@@ -53,29 +53,39 @@ class CreateNewUser implements CreatesNewUsers
                 $invitation = TeamInvitation::find($input['invitation']);
                 
                 if ($invitation && $invitation->email === $user->email) {
-                    // Get the user's current teams
-                    $currentTeams = $user->allTeams();
-                    
-                    // Remove the user from all their current teams
-                    foreach ($currentTeams as $team) {
-                        if ($user->belongsToTeam($team)) {
-                            $team->removeUser($user);
+                    // Check if the action is to decline the invitation
+                    if (isset($input['action']) && $input['action'] === 'decline') {
+                        // Just delete the invitation without adding the user to the team
+                        $invitation->delete();
+                        
+                        // Create a personal team for the user since they declined the invitation
+                        $this->createTeam($user, explode('@', $user->email)[0] . "'s Team");
+                    } else {
+                        // Process as an acceptance
+                        // Get the user's current teams
+                        $currentTeams = $user->allTeams();
+                        
+                        // Remove the user from all their current teams
+                        foreach ($currentTeams as $team) {
+                            if ($user->belongsToTeam($team)) {
+                                $team->removeUser($user);
+                            }
                         }
+                        
+                        // Add the user to the invited team
+                        app(AddTeamMember::class)->add(
+                            $invitation->team->owner,
+                            $invitation->team,
+                            $invitation->email,
+                            $invitation->role
+                        );
+                        
+                        // Switch to the new team
+                        $user->switchTeam($invitation->team);
+                        
+                        // Delete the invitation
+                        $invitation->delete();
                     }
-                    
-                    // Add the user to the invited team
-                    app(AddTeamMember::class)->add(
-                        $invitation->team->owner,
-                        $invitation->team,
-                        $invitation->email,
-                        $invitation->role
-                    );
-                    
-                    // Switch to the new team
-                    $user->switchTeam($invitation->team);
-                    
-                    // Delete the invitation
-                    $invitation->delete();
                 }
             }
 
