@@ -1,0 +1,2120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Nomad - Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0066CC;
+            --primary-light: #e6f0ff;
+            --secondary: #4d4d4d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #6c757d;
+            --border-color: #dee2e6;
+            --shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --radius: 6px;
+            --transition: all 0.2s ease-in-out;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+            color: var(--secondary);
+            background-color: #f5f7fa;
+            padding: 1rem;
+            margin: 0;
+            font-size: 13px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .settings-container {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 1rem;
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .settings-nav {
+            background-color: #f5f7fa;
+            padding: 1rem;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .settings-nav h3 {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+            color: var(--dark-gray);
+        }
+
+        .settings-nav ul {
+            list-style: none;
+        }
+
+        .settings-nav li {
+            margin-bottom: 0.25rem;
+        }
+
+        .settings-nav a {
+            display: block;
+            padding: 0.6rem 0.8rem;
+            text-decoration: none;
+            color: var(--secondary);
+            border-radius: var(--radius);
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .settings-nav a:hover, .settings-nav a.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .settings-content {
+            padding: 1.25rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1.25rem;
+            color: var(--primary);
+        }
+
+        .form-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .form-section h3 {
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            color: var(--secondary);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .form-group .description {
+            font-size: 0.75rem;
+            color: var(--dark-gray);
+            margin-bottom: 0.3rem;
+        }
+
+        .info-text {
+            font-size: 0.75rem;
+            color: var(--dark-gray);
+            margin-top: 0.4rem;
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 12px;
+            padding-right: 2rem;
+        }
+
+        .radio-group, .checkbox-group {
+            margin-bottom: 0.8rem;
+        }
+
+        .radio-option, .checkbox-option {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .radio-option:last-child, .checkbox-option:last-child {
+            margin-bottom: 0;
+        }
+
+        .radio-option input[type="radio"],
+        .checkbox-option input[type="checkbox"] {
+            margin-right: 0.4rem;
+            margin-top: 0.2rem;
+        }
+
+        .option-label {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .option-label .title {
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .option-label .description {
+            font-size: 0.75rem;
+            color: var(--dark-gray);
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group input {
+            border-radius: var(--radius) 0 0 var(--radius);
+        }
+
+        .input-group .input-group-append {
+            padding: 0.5rem;
+            background-color: var(--medium-gray);
+            border: 1px solid var(--border-color);
+            border-left: none;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .input-with-unit {
+            position: relative;
+        }
+
+        .input-with-unit input {
+            padding-right: 2.5rem;
+        }
+
+        .input-with-unit .unit {
+            position: absolute;
+            right: 0.6rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            border: none;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0055aa;
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #bd2130;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.25rem;
+        }
+
+        .fuel-prices-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .fuel-prices-table th,
+        .fuel-prices-table td {
+            padding: 0.4rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .fuel-prices-table th {
+            background-color: var(--light-gray);
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .fuel-prices-table td input {
+            width: 80px; /* More compact width */
+            padding: 0.4rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        .fuel-prices-table td input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+        }
+
+        .vehicles-list {
+            margin-bottom: 1.5rem;
+        }
+
+        .vehicle-card {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .vehicle-card:hover {
+            box-shadow: var(--shadow);
+            border-color: var(--primary);
+        }
+
+        .vehicle-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .vehicle-card h4 {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .vehicle-card .card-actions {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .vehicle-card .card-body {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.8rem;
+        }
+
+        .vehicle-card .detail {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .vehicle-card .detail-label {
+            font-size: 0.75rem;
+            color: var(--dark-gray);
+        }
+
+        .vehicle-card .detail-value {
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .action-icon {
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        .action-icon:hover {
+            background-color: var(--light-gray);
+        }
+
+        .action-icon.edit:hover {
+            color: var(--primary);
+        }
+
+        .action-icon.duplicate:hover {
+            color: var(--warning);
+        }
+
+        .action-icon.delete:hover {
+            color: var(--danger);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+            padding: 0.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            background-color: var(--light-gray);
+            color: var(--danger);
+        }
+
+        .modal-body {
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.8rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .conditional-section {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .conditional-section.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .settings-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .settings-nav {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            
+            .vehicle-card .card-body {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fadeIn {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .add-vehicle-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-switch .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--medium-gray);
+            transition: var(--transition);
+            border-radius: 20px;
+        }
+
+        .toggle-switch .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        .toggle-switch input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .switch-container {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            cursor: pointer;
+        }
+
+        .switch-container label {
+            margin-bottom: 0 !important;
+            cursor: pointer;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.15rem 0.4rem;
+            border-radius: 9999px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-left: 0.4rem;
+        }
+
+        .badge-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #d9a406;
+        }
+
+        .state-toggle {
+            display: flex;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin-bottom: 0.8rem;
+        }
+
+        .state-toggle label {
+            flex: 1;
+            padding: 0.5rem 0.8rem;
+            text-align: center;
+            cursor: pointer;
+            background-color: white;
+            transition: var(--transition);
+            margin: 0;
+            color: var(--secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .state-toggle input[type="radio"] {
+            display: none;
+        }
+
+        .state-toggle input[type="radio"]:checked + label {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .flag-icon {
+            width: 18px;
+            height: 12px;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+            display: inline-block;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* New trailer toggle switch style */
+        .trailer-toggle {
+            display: flex;
+            align-items: stretch;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .trailer-toggle-option {
+            flex: 1;
+            display: none;
+        }
+
+        .trailer-toggle-option + label {
+            flex: 1;
+            padding: 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: var(--transition);
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            margin: 0;
+        }
+
+        .trailer-toggle-option:last-of-type + label {
+            border-right: none;
+        }
+
+        .trailer-toggle-option:checked + label {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .max-vehicles-warning {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .max-vehicles-warning.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="settings-container">
+            <div class="settings-nav">
+                <h3 id="settings-heading">Settings</h3>
+                <ul>
+                    <li><a href="#fuel" class="tab-link active" data-tab="fuel" id="fuel-prices-tab">Fuel Prices</a></li>
+                    <li><a href="#vehicles" class="tab-link" data-tab="vehicles" id="vehicles-tab-link">Vehicles</a></li>
+                </ul>
+            </div>
+
+            <div class="settings-content">
+                <!-- Fuel Prices Section -->
+                <div id="fuel-tab" class="tab-content active">
+                    <h2 id="fuel-settings-heading">Fuel Price Settings</h2>
+
+                    <div class="form-section">
+                        <h3 id="refueling-options-heading">Refueling Options</h3>
+                        <div class="state-toggle">
+                            <input type="radio" name="fuel-option" id="cheapest-country" value="cheapest" checked>
+                            <label for="cheapest-country" id="cheapest-country-label">Cheapest Country on Route</label>
+                            
+                            <input type="radio" name="fuel-option" id="global-average" value="global">
+                            <label for="global-average" id="global-average-label">Global Average Price</label>
+                        </div>
+                        <div class="info-text" id="cheapest-country-info">When planning a route, we'll consider fuel prices from the cheapest country along your route.</div>
+                        <div id="global-price-container" class="form-group" style="display: none;">
+                            <label for="global-fuel-price" id="global-fuel-price-label">Global Fuel Price</label>
+                            <div class="input-with-unit">
+                                <input type="text" id="global-fuel-price" value="1.35" class="decimal-input" data-decimals="2">
+                                <span class="unit">€/L</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 id="price-source-heading">Price Source</h3>
+                        <div class="state-toggle">
+                            <input type="radio" name="prices-source" id="tn-prices" value="tn" checked>
+                            <label for="tn-prices" id="tn-prices-label">Transport Nomad Prices</label>
+                            
+                            <input type="radio" name="prices-source" id="custom-prices" value="custom">
+                            <label for="custom-prices" id="custom-prices-label">Custom Prices</label>
+                        </div>
+                        <div class="info-text" id="tn-prices-info">Actual prices updated daily based on country averages, you don't have to bother with updates.</div>
+
+                        <div id="custom-prices-container" style="display: none;" class="fadeIn">
+                            <div class="form-group">
+                                <label for="adblue-price" id="adblue-price-label">AdBlue Price</label>
+                                <div class="input-with-unit">
+                                    <input type="text" id="adblue-price" value="0.65" class="decimal-input" data-decimals="2">
+                                    <span class="unit">€/L</span>
+                                </div>
+                            </div>
+
+                            <h4 style="margin: 1rem 0 0.8rem" id="fuel-by-country-heading">Fuel Prices by Country</h4>
+                            <table class="fuel-prices-table">
+                                <thead>
+                                    <tr>
+                                        <th id="country-header">Country</th>
+                                        <th id="code-header">Code</th>
+                                        <th id="price-header">Price (€/L)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="fuel-prices-tbody">
+                                    <!-- JS will populate this table -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn-primary" id="save-fuel-settings">Save Settings</button>
+                        <button class="btn-secondary" id="reset-fuel-settings">Reset to Default</button>
+                    </div>
+                </div>
+
+                <!-- Vehicles Section -->
+                <div id="vehicles-tab" class="tab-content">
+                    <h2 id="vehicles-heading">Vehicle Settings</h2>
+                    
+                    <button class="btn-primary add-vehicle-btn" id="add-vehicle-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span id="add-vehicle-text">Add New Vehicle</span>
+                    </button>
+                    
+                    <div class="max-vehicles-warning" id="max-vehicles-warning">
+                        Maximum number of vehicles (10) reached. Please remove a vehicle before adding a new one.
+                    </div>
+
+                    <div class="vehicles-list" id="vehicles-list">
+                        <!-- JS will populate the vehicles list -->
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn-primary" id="save-vehicles-settings">Save Settings</button>
+                        <button class="btn-secondary" id="reset-vehicles-settings">Reset to Default</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vehicle Edit/Create Modal -->
+    <div class="modal" id="vehicle-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="vehicle-modal-title">Add New Vehicle</h3>
+                <button class="close-modal" id="close-vehicle-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="vehicle-form">
+                    <input type="hidden" id="vehicle-id">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vehicle-name" id="vehicle-name-label">Vehicle Name</label>
+                            <input type="text" id="vehicle-name" required maxlength="6" placeholder="Max 6 characters">
+                            <div class="description" id="vehicle-name-description">Maximum 6 letters or numbers</div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 id="vehicle-params-heading">Vehicle Parameters</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="vehicle-weight" id="vehicle-weight-label">Gross Vehicle Weight (GVW)</label>
+                                <div class="input-with-unit">
+                                    <input type="text" id="vehicle-weight" required class="whole-number-input" min="0" max="44">
+                                    <span class="unit">t</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicle-truck-axles" id="truck-axles-label">Truck Axles</label>
+                                <select id="vehicle-truck-axles" required>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicle-trailer-axles" id="trailer-axles-label">Trailer Axles</label>
+                                <select id="vehicle-trailer-axles" required>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3" selected>3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicle-with-trailer" id="with-trailer-label">With Trailer</label>
+                                <div class="trailer-toggle">
+                                    <input type="radio" id="trailer-yes" name="vehicle-with-trailer" class="trailer-toggle-option" value="yes" checked>
+                                    <label for="trailer-yes" id="trailer-yes-label">Yes</label>
+                                    <input type="radio" id="trailer-no" name="vehicle-with-trailer" class="trailer-toggle-option" value="no">
+                                    <label for="trailer-no" id="trailer-no-label">No</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 id="emissions-heading">Emission Classes</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="vehicle-euro-class" id="euro-class-label">Euro Class</label>
+                                <select id="vehicle-euro-class" required>
+                                    <option value="1">EURO 1</option>
+                                    <option value="2">EURO 2</option>
+                                    <option value="3">EURO 3</option>
+                                    <option value="4">EURO 4</option>
+                                    <option value="5">EURO 5</option>
+                                    <option value="6" selected>EURO 6</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicle-co2-class" id="co2-class-label">CO2 Class</label>
+                                <select id="vehicle-co2-class" required>
+                                    <option value="1" selected>1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <div class="form-section">
+                        <h3 id="consumption-dimensions-heading">Consumption & Dimensions</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="vehicle-fuel-consumption" id="fuel-consumption-label">Fuel Consumption</label>
+                                <div class="input-with-unit">
+                                    <input type="text" id="vehicle-fuel-consumption" required class="decimal-input" data-decimals="1" value="27">
+                                    <span class="unit">L/100km</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicle-adblue-consumption" id="adblue-consumption-label">AdBlue Consumption</label>
+                                <div class="input-with-unit">
+                                    <input type="text" id="vehicle-adblue-consumption" required class="decimal-input" data-decimals="1" value="1.5">
+                                    <span class="unit">L/100km</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicle-height" id="height-label">Height</label>
+                                <div class="input-with-unit">
+                                    <input type="text" id="vehicle-height" required class="decimal-input" data-decimals="1" value="4">
+                                    <span class="unit">m</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicle-width" id="width-label">Width</label>
+                                <div class="input-with-unit">
+                                    <input type="text" id="vehicle-width" required class="decimal-input" data-decimals="1" value="2.55">
+                                    <span class="unit">m</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicle-length" id="length-label">Length</label>
+                                <div class="input-with-unit">
+                                    <input type="text" id="vehicle-length" required class="decimal-input" data-decimals="1" value="16.5">
+                                    <span class="unit">m</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <div class="form-section">
+                        <h3 id="cost-model-heading">Cost Model</h3>
+                        <div class="form-group">
+                            <div class="switch-container" id="simple-costs-container">
+                                <label for="vehicle-simple-costs" id="simple-costs-label">Use simplified cost model</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="vehicle-simple-costs">
+                                    <span class="slider"></span>
+                                </div>
+                            </div>
+                        </div>
+ 
+                        <div id="advanced-costs-section" class="conditional-section active">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="vehicle-working-days" id="working-days-label">Working Days per Year</label>
+                                    <input type="text" id="vehicle-working-days" class="whole-number-input" min="1" max="365" value="240">
+                                </div>
+                                <div class="form-group">
+                                    <label for="vehicle-avg-km" id="avg-km-label">Average Annual Mileage</label>
+                                    <div class="input-with-unit">
+                                        <input type="text" id="vehicle-avg-km" class="whole-number-input" min="1" max="30000" value="12500">
+                                        <span class="unit">km</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="vehicle-fixed-costs" id="fixed-costs-label">Fixed Monthly Costs</label>
+                                    <div class="input-with-unit">
+                                        <input type="text" id="vehicle-fixed-costs" class="whole-number-input" min="0" max="100000" value="7000">
+                                        <span class="unit">€</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="vehicle-variable-costs" id="variable-costs-label">Variable Costs per Kilometer</label>
+                                    <div class="input-with-unit">
+                                        <input type="text" id="vehicle-variable-costs" class="decimal-input" data-decimals="2" value="0">
+                                        <span class="unit">€/km</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+ 
+                        <div id="simple-costs-section" class="conditional-section">
+                            <div class="form-group">
+                                <label for="vehicle-simple-cost-value" id="simple-cost-value-label">Cost per Kilometer (simplified)</label>
+                                <div class="input-with-unit">
+                                    <input type="text" id="vehicle-simple-cost-value" class="decimal-input" data-decimals="2" value="1.35">
+                                    <span class="unit">€/km</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancel-vehicle">Cancel</button>
+                <button class="btn-primary" id="save-vehicle">Save Vehicle</button>
+            </div>
+        </div>
+    </div>
+ 
+    <script>
+        // Initial data
+        const defaultFuelPrices = {
+            'POL': 1.23,
+            'DEU': 1.46,
+            'LUX': 1.28,
+            'CZE': 1.19,
+            'SVK': 1.29,
+            'HUN': 1.25,
+            'AUT': 1.37,
+            'ITA': 1.48,
+            'FRA': 1.31,
+            'ESP': 1.27,
+            'PRT': 1.41,
+            'BEL': 1.29,
+            'NLD': 1.57,
+            'CHE': 1.79,
+            'DNK': 1.61,
+            'SWE': 1.29,
+            'NOR': 1.46,
+            'FIN': 1.43,
+            'EST': 1.22,
+            'LVA': 1.31,
+            'LTU': 1.36,
+            'ROU': 1.28,
+            'BGR': 1.12,
+            'GRC': 1.58,
+            'HRV': 1.15,
+            'SVN': 1.31,
+            'SRB': 1.41,
+            'MKD': 1.42,
+            'BIH': 1.29,
+            'MNE': 1.45,
+            'ALB': 1.42,
+            'adblue': 0.65
+        };
+ 
+        const defaultVehicles = [
+            {
+                id: 'mega',
+                name: 'MEGA',
+                weight: 40000,
+                truckAxles: 2,    
+                trailerAxles: 3,
+                trailerCount: 1,
+                euroClass: '6',
+                co2Class: '1',
+                fuelConsumption: 27,
+                adblueConsumption: 1.5,          
+                costPerKm: 0.20,
+                height: 400,
+                width: 255,
+                length: 1650, 
+                workingDays: 240,
+                avgKm: 12500,
+                advFixedPerMonth: 7000,
+                advVariablePerKM: 0.00,
+                simpleCosts: false,
+                simpleCostValuePerKM: 0
+            },
+            {
+                id: 'standard',
+                name: 'Standard',
+                weight: 40000,
+                truckAxles: 2,
+                trailerAxles: 3,
+                trailerCount: 1,
+                euroClass: '6',
+                co2Class: '1',
+                fuelConsumption: 27,
+                adblueConsumption: 1.5,
+                costPerKm: 0.15,
+                height: 400,
+                width: 255,
+                length: 1650,
+                workingDays: 240,
+                avgKm: 12500,
+                advFixedPerMonth: 6500,
+                advVariablePerKM: 0.00,
+                simpleCosts: false,
+                simpleCostValuePerKM: 0
+            },
+            {
+                id: 'jumbo',
+                name: 'JUMBO',
+                weight: 30000,
+                truckAxles: 2,      
+                trailerAxles: 1,
+                trailerCount: 1,
+                euroClass: '6',
+                co2Class: '1',
+                fuelConsumption: 20,
+                adblueConsumption: 1.5,
+                costPerKm: 0.10,
+                height: 400,
+                width: 255,
+                length: 1750,
+                workingDays: 250,
+                avgKm: 12000,
+                advFixedPerMonth: 6500,
+                advVariablePerKM: 0.00,
+                simpleCosts: false,
+                simpleCostValuePerKM: 0
+            },
+            {
+                id: 'solo',
+                name: 'Solo',
+                weight: 8000,
+                truckAxles: 2,    
+                trailerAxles: 0,
+                trailerCount: 0,
+                euroClass: '6',
+                co2Class: '1',
+                fuelConsumption: 20,
+                adblueConsumption: 1.5,
+                costPerKm: 0.10,
+                height: 350,
+                width: 255,
+                length: 850,
+                workingDays: 250,
+                avgKm: 12000,
+                advFixedPerMonth: 4500,
+                advVariablePerKM: 0.35,
+                simpleCosts: true,
+                simpleCostValuePerKM: 1.35
+            }
+        ];
+ 
+        // Application state
+        let companyCosts = {
+            useLowestFuelPrice: true,
+            useCustomFuelPrices: false,
+            globalFuelPrice: 1.35,
+            globalAdBluePrice: 0.65,
+            customFuelPrices: {...defaultFuelPrices}
+        };
+ 
+        let vehicles = [...defaultVehicles];
+        let editingVehicleIndex = -1;
+        const MAX_VEHICLES = 10;
+ 
+        // Translation system
+        const translations = {
+            'en': {
+                'settings': 'Settings',
+                'fuelPrices': 'Fuel Prices',
+                'vehicles': 'Vehicles',
+                'fuelPriceSettings': 'Fuel Price Settings',
+                'refuelingOptions': 'Refueling Options',
+                'cheapestCountry': 'Cheapest Country on Route',
+                'globalAverage': 'Global Average Price',
+                'globalFuelPrice': 'Global Fuel Price',
+                'priceSource': 'Price Source',
+                'tnPrices': 'Transport Nomad Prices',
+                'customPrices': 'Custom Prices',
+                'adbluePrice': 'AdBlue Price',
+                'fuelByCountry': 'Fuel Prices by Country',
+                'country': 'Country',
+                'code': 'Code',
+                'price': 'Price (€/L)',
+                'saveSettings': 'Save Settings',
+                'resetToDefault': 'Reset to Default',
+                'vehicleSettings': 'Vehicle Settings',
+                'addNewVehicle': 'Add New Vehicle',
+                'vehicleName': 'Vehicle Name',
+                'max6Characters': 'Maximum 6 letters or numbers',
+                'vehicleParameters': 'Vehicle Parameters',
+                'grossWeight': 'Gross Vehicle Weight (GVW)',
+                'truckAxles': 'Truck Axles',
+                'trailerAxles': 'Trailer Axles',
+                'withTrailer': 'With Trailer',
+                'yes': 'Yes',
+                'no': 'No',
+                'emissionClasses': 'Emission Classes',
+                'euroClass': 'Euro Class',
+                'co2Class': 'CO2 Class',
+                'consumptionDimensions': 'Consumption & Dimensions',
+                'fuelConsumption': 'Fuel Consumption',
+                'adblueConsumption': 'AdBlue Consumption',
+                'height': 'Height',
+                'width': 'Width',
+                'length': 'Length',
+                'costModel': 'Cost Model',
+                'useSimpleCostModel': 'Use simplified cost model',
+                'workingDays': 'Working Days per Year',
+                'avgMileage': 'Average Annual Mileage',
+                'fixedMonthlyCosts': 'Fixed Monthly Costs',
+                'variableCostsKm': 'Variable Costs per Kilometer',
+                'costPerKm': 'Cost per Kilometer (simplified)',
+                'cancel': 'Cancel',
+                'saveVehicle': 'Save Vehicle',
+                'simpleCosts': 'Simplified costs',
+                'advancedCosts': 'Advanced costs',
+                'edit': 'Edit',
+                'duplicate': 'Duplicate',
+                'delete': 'Delete',
+                'dimensions': 'Dimensions (HxWxL)',
+                'axles': 'Axles (truck/trailer)',
+                'emissions': 'Emissions',
+                'confirm': 'Confirm',
+                'settingsSaved': 'Settings saved',
+                'settingsReset': 'Settings reset to default',
+                'vehicleSaved': 'Vehicle saved',
+                'vehicleNameRequired': 'Vehicle name is required',
+                'confirmDelete': 'Are you sure you want to delete this vehicle?',
+                'cantDeleteLast': 'Cannot delete the last vehicle!',
+                'tnPricesInfo': 'Actual prices updated daily based on country averages, you don\'t have to bother with updates.',
+                'cheapestCountryInfo': 'When planning a route, we\'ll consider fuel prices from the cheapest country along your route.',
+                'maxVehiclesWarning': 'Maximum number of vehicles (10) reached. Please remove a vehicle before adding a new one.'
+            },
+            'de': {
+                'settings': 'Einstellungen',
+                'fuelPrices': 'Kraftstoffpreise',
+                'vehicles': 'Fahrzeuge',
+                'fuelPriceSettings': 'Kraftstoffpreis-Einstellungen',
+                'refuelingOptions': 'Tankoptionen',
+                'cheapestCountry': 'Günstigstes Land auf der Route',
+                'globalAverage': 'Globaler Durchschnittspreis',
+                'globalFuelPrice': 'Globaler Kraftstoffpreis',
+                'priceSource': 'Preisquelle',
+                'tnPrices': 'Transport Nomad Preise',
+                'customPrices': 'Benutzerdefinierte Preise',
+                'adbluePrice': 'AdBlue Preis',
+                'fuelByCountry': 'Kraftstoffpreise nach Land',
+                'country': 'Land',
+                'code': 'Code',
+                'price': 'Preis (€/L)',
+                'saveSettings': 'Einstellungen speichern',
+                'resetToDefault': 'Auf Standard zurücksetzen',
+                'vehicleSettings': 'Fahrzeugeinstellungen',
+                'addNewVehicle': 'Neues Fahrzeug hinzufügen',
+                'vehicleName': 'Fahrzeugname',
+                'max6Characters': 'Maximal 6 Buchstaben oder Zahlen',
+                'vehicleParameters': 'Fahrzeugparameter',
+                'grossWeight': 'Gesamtgewicht (GVW)',
+                'truckAxles': 'LKW-Achsen',
+                'trailerAxles': 'Anhänger-Achsen',
+                'withTrailer': 'Mit Anhänger',
+                'yes': 'Ja',
+                'no': 'Nein',
+                'emissionClasses': 'Emissionsklassen',
+                'euroClass': 'Euro-Klasse',
+                'co2Class': 'CO2-Klasse',
+                'consumptionDimensions': 'Verbrauch & Abmessungen',
+                'fuelConsumption': 'Kraftstoffverbrauch',
+                'adblueConsumption': 'AdBlue Verbrauch',
+                'height': 'Höhe',
+                'width': 'Breite',
+                'length': 'Länge',
+                'costModel': 'Kostenmodell',
+                'useSimpleCostModel': 'Vereinfachtes Kostenmodell verwenden',
+                'workingDays': 'Arbeitstage pro Jahr',
+                'avgMileage': 'Durchschnittliche Jahreskilometerleistung',
+                'fixedMonthlyCosts': 'Monatliche Fixkosten',
+                'variableCostsKm': 'Variable Kosten pro Kilometer',
+                'costPerKm': 'Kosten pro Kilometer (vereinfacht)',
+                'cancel': 'Abbrechen',
+                'saveVehicle': 'Fahrzeug speichern',
+                'simpleCosts': 'Vereinfachte Kosten',
+                'advancedCosts': 'Erweiterte Kosten',
+                'edit': 'Bearbeiten',
+                'duplicate': 'Duplizieren',
+                'delete': 'Löschen',
+                'dimensions': 'Abmessungen (HxBxL)',
+                'axles': 'Achsen (LKW/Anhänger)',
+                'emissions': 'Emissionen',
+                'confirm': 'Bestätigen',
+                'settingsSaved': 'Einstellungen gespeichert',
+                'settingsReset': 'Einstellungen auf Standard zurückgesetzt',
+                'vehicleSaved': 'Fahrzeug gespeichert',
+                'vehicleNameRequired': 'Fahrzeugname ist erforderlich',
+                'confirmDelete': 'Sind Sie sicher, dass Sie dieses Fahrzeug löschen möchten?',
+                'cantDeleteLast': 'Das letzte Fahrzeug kann nicht gelöscht werden!',
+                'tnPricesInfo': 'Aktuelle Preise werden täglich aktualisiert, basierend auf Länderdurchschnitten. Sie müssen sich nicht um Updates kümmern.',
+                'cheapestCountryInfo': 'Bei der Routenplanung berücksichtigen wir die Kraftstoffpreise aus dem günstigsten Land entlang Ihrer Route.',
+                'maxVehiclesWarning': 'Maximale Anzahl an Fahrzeugen (10) erreicht. Bitte entfernen Sie ein Fahrzeug, bevor Sie ein neues hinzufügen.'
+            },
+            'pl': {
+                'settings': 'Ustawienia',
+                'fuelPrices': 'Ceny paliwa',
+                'vehicles': 'Pojazdy',
+                'fuelPriceSettings': 'Ustawienia cen paliwa',
+                'refuelingOptions': 'Opcje tankowania',
+                'cheapestCountry': 'Najtańszy kraj na trasie',
+                'globalAverage': 'Średnia cena globalna',
+                'globalFuelPrice': 'Globalna cena paliwa',
+                'priceSource': 'Źródło cen',
+                'tnPrices': 'Ceny Transport Nomad',
+                'customPrices': 'Własne ceny',
+                'adbluePrice': 'Cena AdBlue',
+                'fuelByCountry': 'Ceny paliwa według krajów',
+                'country': 'Kraj',
+                'code': 'Kod',
+                'price': 'Cena (€/L)',
+                'saveSettings': 'Zapisz ustawienia',
+                'resetToDefault': 'Przywróć domyślne',
+                'vehicleSettings': 'Ustawienia pojazdów',
+                'addNewVehicle': 'Dodaj nowy pojazd',
+                'vehicleName': 'Nazwa pojazdu',
+                'max6Characters': 'Maksymalnie 6 liter lub cyfr',
+                'vehicleParameters': 'Parametry pojazdu',
+                'grossWeight': 'Masa całkowita (GVW)',
+                'truckAxles': 'Osie ciągnika',
+                'trailerAxles': 'Osie naczepy',
+                'withTrailer': 'Z naczepą',
+                'yes': 'Tak',
+                'no': 'Nie',
+                'emissionClasses': 'Klasy emisji',
+                'euroClass': 'Klasa Euro',
+                'co2Class': 'Klasa CO2',
+                'consumptionDimensions': 'Zużycie i wymiary',
+                'fuelConsumption': 'Zużycie paliwa',
+                'adblueConsumption': 'Zużycie AdBlue',
+                'height': 'Wysokość',
+                'width': 'Szerokość',
+                'length': 'Długość',
+                'costModel': 'Model kosztów',
+                'useSimpleCostModel': 'Użyj uproszczonego modelu kosztów',
+                'workingDays': 'Dni robocze w roku',
+                'avgMileage': 'Średni roczny przebieg',
+                'fixedMonthlyCosts': 'Stałe koszty miesięczne',
+                'variableCostsKm': 'Zmienne koszty na kilometr',
+                'costPerKm': 'Koszt na kilometr (uproszczony)',
+                'cancel': 'Anuluj',
+                'saveVehicle': 'Zapisz pojazd',
+                'simpleCosts': 'Koszty uproszczone',
+                'advancedCosts': 'Koszty zaawansowane',
+                'edit': 'Edytuj',
+                'duplicate': 'Duplikuj',
+                'delete': 'Usuń',
+                'dimensions': 'Wymiary (WxSxD)',
+                'axles': 'Osie (ciągnik/naczepa)',
+                'emissions': 'Emisje',
+                'confirm': 'Potwierdź',
+                'settingsSaved': 'Ustawienia zapisane',
+                'settingsReset': 'Przywrócono domyślne ustawienia',
+                'vehicleSaved': 'Pojazd zapisany',
+                'vehicleNameRequired': 'Nazwa pojazdu jest wymagana',
+                'confirmDelete': 'Czy na pewno chcesz usunąć ten pojazd?',
+                'cantDeleteLast': 'Nie można usunąć ostatniego pojazdu!',
+                'tnPricesInfo': 'Aktualne ceny aktualizowane codziennie na podstawie średnich krajowych, nie musisz martwić się o aktualizacje.',
+                'cheapestCountryInfo': 'Przy wyznaczeniu trasy weźmiemy pod uwagę cenę paliwa z najtańszego kraju po drodze trasy.',
+                'maxVehiclesWarning': 'Osiągnięto maksymalną liczbę pojazdów (10). Usuń jeden pojazd przed dodaniem nowego.'
+            }
+        };
+ 
+        // Get user's language
+        function getUserLanguage() {
+            const browserLang = navigator.language.substring(0, 2);
+            if (translations[browserLang]) {
+                return browserLang;
+            }
+            return 'en'; // Default to English
+        }
+ 
+        const currentLang = getUserLanguage();
+ 
+        // Translation function
+        function t(key) {
+            return translations[currentLang][key] || translations['en'][key] || key;
+        }
+ 
+        // Initialize interface
+        document.addEventListener('DOMContentLoaded', function() {
+            initTranslations();
+            initTabs();
+            populateFuelPricesTable();
+            populateVehiclesList();
+            initEventListeners();
+            initFormattingHandlers();
+            updateMaxVehiclesWarning();
+        });
+ 
+        // Apply translations
+        function initTranslations() {
+            // Fuel tab
+            document.getElementById('settings-heading').textContent = t('settings');
+            document.getElementById('fuel-prices-tab').textContent = t('fuelPrices');
+            document.getElementById('vehicles-tab-link').textContent = t('vehicles');
+            document.getElementById('fuel-settings-heading').textContent = t('fuelPriceSettings');
+            document.getElementById('refueling-options-heading').textContent = t('refuelingOptions');
+            document.getElementById('cheapest-country-label').textContent = t('cheapestCountry');
+            document.getElementById('global-average-label').textContent = t('globalAverage');
+            document.getElementById('global-fuel-price-label').textContent = t('globalFuelPrice');
+            document.getElementById('price-source-heading').textContent = t('priceSource');
+            document.getElementById('tn-prices-label').textContent = t('tnPrices');
+            document.getElementById('custom-prices-label').textContent = t('customPrices');
+            document.getElementById('adblue-price-label').textContent = t('adbluePrice');
+            document.getElementById('fuel-by-country-heading').textContent = t('fuelByCountry');
+            document.getElementById('country-header').textContent = t('country');
+            document.getElementById('code-header').textContent = t('code');
+            document.getElementById('price-header').textContent = t('price');
+            document.getElementById('save-fuel-settings').textContent = t('saveSettings');
+            document.getElementById('reset-fuel-settings').textContent = t('resetToDefault');
+            document.getElementById('tn-prices-info').textContent = t('tnPricesInfo');
+            document.getElementById('cheapest-country-info').textContent = t('cheapestCountryInfo');
+            document.getElementById('max-vehicles-warning').textContent = t('maxVehiclesWarning');
+ 
+            // Vehicles tab
+            document.getElementById('vehicles-heading').textContent = t('vehicleSettings');
+            document.getElementById('add-vehicle-text').textContent = t('addNewVehicle');
+            document.getElementById('save-vehicles-settings').textContent = t('saveSettings');
+            document.getElementById('reset-vehicles-settings').textContent = t('resetToDefault');
+ 
+            // Vehicle modal
+            document.getElementById('vehicle-modal-title').textContent = t('addNewVehicle');
+            document.getElementById('vehicle-name-label').textContent = t('vehicleName');
+            document.getElementById('vehicle-name-description').textContent = t('max6Characters');
+            document.getElementById('vehicle-params-heading').textContent = t('vehicleParameters');
+            document.getElementById('vehicle-weight-label').textContent = t('grossWeight');
+            document.getElementById('truck-axles-label').textContent = t('truckAxles');
+            document.getElementById('trailer-axles-label').textContent = t('trailerAxles');
+            document.getElementById('with-trailer-label').textContent = t('withTrailer');
+            document.getElementById('emissions-heading').textContent = t('emissionClasses');
+            document.getElementById('euro-class-label').textContent = t('euroClass');
+            document.getElementById('co2-class-label').textContent = t('co2Class');
+            document.getElementById('consumption-dimensions-heading').textContent = t('consumptionDimensions');
+            document.getElementById('fuel-consumption-label').textContent = t('fuelConsumption');
+            document.getElementById('adblue-consumption-label').textContent = t('adblueConsumption');
+            document.getElementById('height-label').textContent = t('height');
+            document.getElementById('width-label').textContent = t('width');
+            document.getElementById('length-label').textContent = t('length');
+            document.getElementById('cost-model-heading').textContent = t('costModel');
+            document.getElementById('simple-costs-label').textContent = t('useSimpleCostModel');
+            document.getElementById('working-days-label').textContent = t('workingDays');
+            document.getElementById('avg-km-label').textContent = t('avgMileage');
+            document.getElementById('fixed-costs-label').textContent = t('fixedMonthlyCosts');
+            document.getElementById('variable-costs-label').textContent = t('variableCostsKm');
+            document.getElementById('simple-cost-value-label').textContent = t('costPerKm');
+            document.getElementById('cancel-vehicle').textContent = t('cancel');
+            document.getElementById('save-vehicle').textContent = t('saveVehicle');
+            
+            // Trailer toggle options
+            document.getElementById('trailer-yes-label').textContent = t('yes');
+            document.getElementById('trailer-no-label').textContent = t('no');
+        }
+ 
+        // Handle tabs
+        function initTabs() {
+            document.querySelectorAll('.tab-link').forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Activate tab
+                    document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+        }
+ 
+        // Initialize number formatting handlers - improved version without showing initial zero
+        // Replace your current initFormattingHandlers function with this:
+        function initFormattingHandlers() {
+            // Decimal input handler - revised for natural typing
+            document.querySelectorAll('.decimal-input').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    // Allow only numbers and one decimal separator (either . or ,)
+                    let value = this.value;
+                    // Replace commas with dots for consistency
+                    value = value.replace(/,/g, '.');
+                    // Remove any character that is not a number or decimal point
+                    value = value.replace(/[^\d.]/g, '');
+                    
+                    // Ensure only one decimal point
+                    const parts = value.split('.');
+                    if (parts.length > 2) {
+                        value = parts[0] + '.' + parts.slice(1).join('');
+                    }
+                    
+                    this.value = value;
+                });
+                
+                input.addEventListener('blur', function() {
+                    if (this.value === '' || this.value === '.') {
+                        this.value = '0.' + '0'.repeat(parseInt(this.dataset.decimals || 2));
+                        return;
+                    }
+                    
+                    // Replace comma with dot for calculation
+                    let value = this.value.replace(/,/g, '.');
+                    
+                    // Format to correct decimal places
+                    const decimals = parseInt(this.dataset.decimals || 2);
+                    let num = parseFloat(value);
+                    if (isNaN(num)) {
+                        num = 0;
+                    }
+                    
+                    // Apply min/max if available
+                    const min = this.hasAttribute('min') ? parseFloat(this.getAttribute('min')) : null;
+                    const max = this.hasAttribute('max') ? parseFloat(this.getAttribute('max')) : null;
+                    
+                    if (min !== null && num < min) num = min;
+                    if (max !== null && num > max) num = max;
+                    
+                    // Format with specific decimal places
+                    this.value = num.toFixed(decimals);
+                });
+            });
+            
+            // Whole number input handler - no changes needed
+            document.querySelectorAll('.whole-number-input').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    // Remove everything except numbers
+                    let value = this.value.replace(/[^\d]/g, '');
+                    this.value = value;
+                });
+                
+                input.addEventListener('blur', function() {
+                    if (this.value === '') {
+                        this.value = '0';
+                        return;
+                    }
+                    
+                    // Parse and format
+                    let num = parseInt(this.value);
+                    if (isNaN(num)) {
+                        num = 0;
+                    }
+                    
+                    // Apply min/max if available
+                    const min = this.hasAttribute('min') ? parseInt(this.getAttribute('min')) : null;
+                    const max = this.hasAttribute('max') ? parseInt(this.getAttribute('max')) : null;
+                    
+                    if (min !== null && num < min) num = min;
+                    if (max !== null && num > max) num = max;
+                    
+                    // Format as integer
+                    this.value = num.toString();
+                });
+            });
+        }
+
+       // Populate fuel prices table with country flags
+       function populateFuelPricesTable() {
+           const tbody = document.getElementById('fuel-prices-tbody');
+           tbody.innerHTML = '';
+
+           const countries = Object.keys(defaultFuelPrices).filter(key => key !== 'adblue');
+           countries.sort();
+
+           countries.forEach(countryCode => {
+               const row = document.createElement('tr');
+               
+               // Country name with flag
+               const countryName = getCountryName(countryCode);
+               const countryFlag = getCountryFlag(countryCode);
+               
+               row.innerHTML = `
+                   <td>
+                       <span class="flag-icon" style="background-image: url('${countryFlag}')"></span>
+                       ${countryName}
+                   </td>
+                   <td>${countryCode}</td>
+                   <td>
+                       <input type="text" class="fuel-price-input decimal-input" data-decimals="2" data-country="${countryCode}" 
+                           value="${companyCosts.customFuelPrices[countryCode] || defaultFuelPrices[countryCode]}">
+                   </td>
+               `;
+               
+               tbody.appendChild(row);
+           });
+
+           // Set AdBlue value
+           document.getElementById('adblue-price').value = companyCosts.globalAdBluePrice;
+
+           // Set switch states
+           document.getElementById(companyCosts.useLowestFuelPrice ? 'cheapest-country' : 'global-average').checked = true;
+           document.getElementById(companyCosts.useCustomFuelPrices ? 'custom-prices' : 'tn-prices').checked = true;
+           
+           // Show/hide dependent fields
+           document.getElementById('global-price-container').style.display = 
+               companyCosts.useLowestFuelPrice ? 'none' : 'block';
+           document.getElementById('custom-prices-container').style.display = 
+               companyCosts.useCustomFuelPrices ? 'block' : 'none';
+
+           // Set global fuel price
+           document.getElementById('global-fuel-price').value = companyCosts.globalFuelPrice;
+           
+           // Show/hide info messages
+           document.getElementById('cheapest-country-info').style.display = 
+               companyCosts.useLowestFuelPrice ? 'block' : 'none';
+           document.getElementById('tn-prices-info').style.display = 
+               companyCosts.useCustomFuelPrices ? 'none' : 'block';
+       }
+
+       // Populate vehicles list
+       function populateVehiclesList() {
+           const vehiclesList = document.getElementById('vehicles-list');
+           vehiclesList.innerHTML = '';
+
+           vehicles.forEach((vehicle, index) => {
+               const card = document.createElement('div');
+               card.className = 'vehicle-card';
+               card.dataset.index = index;
+
+               // Convert values to display units
+               const displayWeight = vehicle.weight / 1000; // kg -> t
+               const displayHeight = vehicle.height / 100; // cm -> m
+               const displayWidth = vehicle.width / 100; // cm -> m
+               const displayLength = vehicle.length / 100; // cm -> m
+
+               card.innerHTML = `
+                   <div class="card-header">
+                       <h4>${vehicle.name} 
+                           ${vehicle.simpleCosts 
+                               ? `<span class="badge badge-warning">${t('simpleCosts')}</span>` 
+                               : `<span class="badge badge-success">${t('advancedCosts')}</span>`}
+                       </h4>
+                       <div class="card-actions">
+                           <div class="action-icon edit" title="${t('edit')}">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                               </svg>
+                           </div>
+                           <div class="action-icon duplicate" title="${t('duplicate')}">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                               </svg>
+                           </div>
+                           <div class="action-icon delete" title="${t('delete')}">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                   <polyline points="3 6 5 6 21 6"></polyline>
+                                   <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                               </svg>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="card-body">
+                       <div class="detail">
+                           <span class="detail-label">GVW</span>
+                           <span class="detail-value">${displayWeight} t</span>
+                       </div>
+                       <div class="detail">
+                           <span class="detail-label">${t('axles')}</span>
+                           <span class="detail-value">${vehicle.truckAxles}/${vehicle.trailerAxles}</span>
+                       </div>
+                       <div class="detail">
+                           <span class="detail-label">${t('emissions')}</span>
+                           <span class="detail-value">EURO ${vehicle.euroClass} / CO2-${vehicle.co2Class}</span>
+                       </div>
+                       <div class="detail">
+                           <span class="detail-label">${t('dimensions')}</span>
+                           <span class="detail-value">${displayHeight}x${displayWidth}x${displayLength} m</span>
+                       </div>
+                       <div class="detail">
+                           <span class="detail-label">${t('fuelConsumption')}</span>
+                           <span class="detail-value">${vehicle.fuelConsumption} L/100km</span>
+                       </div>
+                       <div class="detail">
+                           <span class="detail-label">${t('adblueConsumption')}</span>
+                           <span class="detail-value">${vehicle.adblueConsumption} L/100km</span>
+                       </div>
+                       ${vehicle.simpleCosts 
+                           ? `<div class="detail">
+                               <span class="detail-label">${t('costPerKm')}</span>
+                               <span class="detail-value">${vehicle.simpleCostValuePerKM.toFixed(2)} €/km</span>
+                             </div>` 
+                           : `<div class="detail">
+                               <span class="detail-label">${t('fixedMonthlyCosts')}</span>
+                               <span class="detail-value">${vehicle.advFixedPerMonth} €/month</span>
+                             </div>
+                             <div class="detail">
+                               <span class="detail-label">${t('workingDays')}</span>
+                               <span class="detail-value">${vehicle.workingDays} days/year</span>
+                             </div>`
+                       }
+                   </div>
+               `;
+
+               // Add action button handlers
+               vehiclesList.appendChild(card);
+               
+               // Edit button handler
+               card.querySelector('.edit').addEventListener('click', () => {
+                   editVehicle(index);
+               });
+               
+               // Duplicate button handler
+               card.querySelector('.duplicate').addEventListener('click', () => {
+                   duplicateVehicle(index);
+               });
+               
+               // Delete button handler
+               card.querySelector('.delete').addEventListener('click', () => {
+                   deleteVehicle(index);
+               });
+           });
+           
+           // Update max vehicles warning
+           updateMaxVehiclesWarning();
+       }
+
+       // Check if max vehicles limit is reached and update UI
+       function updateMaxVehiclesWarning() {
+           const maxWarning = document.getElementById('max-vehicles-warning');
+           const addButton = document.getElementById('add-vehicle-btn');
+           
+           if (vehicles.length >= MAX_VEHICLES) {
+               maxWarning.classList.add('visible');
+               addButton.disabled = true;
+               addButton.style.opacity = '0.5';
+               addButton.style.cursor = 'not-allowed';
+           } else {
+               maxWarning.classList.remove('visible');
+               addButton.disabled = false;
+               addButton.style.opacity = '1';
+               addButton.style.cursor = 'pointer';
+           }
+       }
+
+       // Initialize all event listeners
+       function initEventListeners() {
+           // Fueling option switcher
+           document.querySelectorAll('input[name="fuel-option"]').forEach(radio => {
+               radio.addEventListener('change', function() {
+                   companyCosts.useLowestFuelPrice = this.value === 'cheapest';
+                   document.getElementById('global-price-container').style.display = 
+                       companyCosts.useLowestFuelPrice ? 'none' : 'block';
+                   document.getElementById('cheapest-country-info').style.display = 
+                       companyCosts.useLowestFuelPrice ? 'block' : 'none';
+               });
+           });
+
+           // Price source switcher
+           document.querySelectorAll('input[name="prices-source"]').forEach(radio => {
+               radio.addEventListener('change', function() {
+                   companyCosts.useCustomFuelPrices = this.value === 'custom';
+                   document.getElementById('custom-prices-container').style.display = 
+                       companyCosts.useCustomFuelPrices ? 'block' : 'none';
+                   document.getElementById('tn-prices-info').style.display = 
+                       companyCosts.useCustomFuelPrices ? 'none' : 'block';
+               });
+           });
+
+           // Add vehicle button handler
+           document.getElementById('add-vehicle-btn').addEventListener('click', function() {
+               if (vehicles.length < MAX_VEHICLES) {
+                   addNewVehicle();
+               }
+           });
+
+           // Vehicle modal handlers
+           document.getElementById('close-vehicle-modal').addEventListener('click', closeVehicleModal);
+           document.getElementById('cancel-vehicle').addEventListener('click', closeVehicleModal);
+           document.getElementById('save-vehicle').addEventListener('click', saveVehicle);
+           
+           // Cost model toggle handler - whole container clickable
+           document.getElementById('simple-costs-container').addEventListener('click', function(e) {
+               const checkbox = document.getElementById('vehicle-simple-costs');
+               checkbox.checked = !checkbox.checked;
+               toggleCostsModel(checkbox.checked);
+               
+               // Stop propagation to prevent bubbling
+               e.stopPropagation();
+           });
+           
+           // Also handle actual checkbox change
+           document.getElementById('vehicle-simple-costs').addEventListener('change', function() {
+               toggleCostsModel(this.checked);
+           });
+
+           // Save fuel settings button
+           document.getElementById('save-fuel-settings').addEventListener('click', saveFuelSettings);
+           
+           // Reset fuel settings button
+           document.getElementById('reset-fuel-settings').addEventListener('click', resetFuelSettings);
+           
+           // Save vehicles settings button
+           document.getElementById('save-vehicles-settings').addEventListener('click', saveVehiclesSettings);
+           
+           // Reset vehicles settings button
+           document.getElementById('reset-vehicles-settings').addEventListener('click', resetVehiclesSettings);
+
+           // Vehicle name validator
+           document.getElementById('vehicle-name').addEventListener('input', function() {
+               this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').substring(0, 6);
+           });
+           
+           // Trailer radio buttons handler
+           document.querySelectorAll('input[name="vehicle-with-trailer"]').forEach(radio => {
+               radio.addEventListener('change', function() {
+                   const trailerAxlesSelect = document.getElementById('vehicle-trailer-axles');
+                   if (this.value === 'no') {
+                       trailerAxlesSelect.value = '0';
+                       trailerAxlesSelect.disabled = true;
+                   } else {
+                       trailerAxlesSelect.disabled = false;
+                       if (trailerAxlesSelect.value === '0') {
+                           trailerAxlesSelect.value = '3'; // Default for trailers
+                       }
+                   }
+               });
+           });
+       }
+
+       // Toggle cost model sections
+       function toggleCostsModel(useSimpleModel) {
+           document.getElementById('advanced-costs-section').classList.toggle('active', !useSimpleModel);
+           document.getElementById('simple-costs-section').classList.toggle('active', useSimpleModel);
+       }
+
+       // Add new vehicle
+       function addNewVehicle() {
+           if (vehicles.length >= MAX_VEHICLES) {
+               alert(t('maxVehiclesWarning'));
+               return;
+           }
+           
+           editingVehicleIndex = -1;
+           document.getElementById('vehicle-modal-title').textContent = t('addNewVehicle');
+           
+           // Clear form
+           document.getElementById('vehicle-form').reset();
+           document.getElementById('vehicle-id').value = '';
+           
+           // Set default values
+           document.getElementById('vehicle-simple-costs').checked = false;
+           toggleCostsModel(false);
+           
+           // Set the trailer radio button default
+           document.getElementById('trailer-yes').checked = true;
+           document.getElementById('vehicle-trailer-axles').disabled = false;
+           
+           // Show modal
+           document.getElementById('vehicle-modal').classList.add('active');
+       }
+
+       // Edit existing vehicle
+       function editVehicle(index) {
+           editingVehicleIndex = index;
+           const vehicle = vehicles[index];
+           document.getElementById('vehicle-modal-title').textContent = t('edit') + ' ' + vehicle.name;
+           
+           // Fill form with vehicle data
+           document.getElementById('vehicle-id').value = vehicle.id;
+           document.getElementById('vehicle-name').value = vehicle.name;
+           document.getElementById('vehicle-weight').value = vehicle.weight / 1000; // kg -> t
+           document.getElementById('vehicle-truck-axles').value = vehicle.truckAxles;
+           document.getElementById('vehicle-trailer-axles').value = vehicle.trailerAxles;
+           
+           // Set trailer radio button based on trailer count
+           const hasTrailer = vehicle.trailerCount > 0;
+           document.getElementById(hasTrailer ? 'trailer-yes' : 'trailer-no').checked = true;
+           
+           // Set trailer axles disabled if no trailer
+           const trailerAxlesSelect = document.getElementById('vehicle-trailer-axles');
+           trailerAxlesSelect.disabled = !hasTrailer;
+           
+           document.getElementById('vehicle-euro-class').value = vehicle.euroClass;
+           document.getElementById('vehicle-co2-class').value = vehicle.co2Class;
+           document.getElementById('vehicle-fuel-consumption').value = vehicle.fuelConsumption;
+           document.getElementById('vehicle-adblue-consumption').value = vehicle.adblueConsumption;
+           document.getElementById('vehicle-height').value = vehicle.height / 100; // cm -> m
+           document.getElementById('vehicle-width').value = vehicle.width / 100; // cm -> m
+           document.getElementById('vehicle-length').value = vehicle.length / 100; // cm -> m
+           document.getElementById('vehicle-simple-costs').checked = vehicle.simpleCosts;
+           document.getElementById('vehicle-working-days').value = vehicle.workingDays;
+           document.getElementById('vehicle-avg-km').value = vehicle.avgKm;
+           document.getElementById('vehicle-fixed-costs').value = vehicle.advFixedPerMonth;
+           document.getElementById('vehicle-variable-costs').value = vehicle.advVariablePerKM;
+           document.getElementById('vehicle-simple-cost-value').value = vehicle.simpleCostValuePerKM;
+           
+           // Set section visibility
+           toggleCostsModel(vehicle.simpleCosts);
+           
+           // Show modal
+           document.getElementById('vehicle-modal').classList.add('active');
+       }
+
+       // Duplicate vehicle
+       function duplicateVehicle(index) {
+           if (vehicles.length >= MAX_VEHICLES) {
+               alert(t('maxVehiclesWarning'));
+               return;
+           }
+           
+           const originalVehicle = vehicles[index];
+           const newVehicle = {...originalVehicle};
+           
+           // Change name and ID
+           newVehicle.name = originalVehicle.name + 'c';
+           newVehicle.name = newVehicle.name.substring(0, 6);
+           newVehicle.id = newVehicle.name.toLowerCase();
+           
+           // Add new vehicle
+           vehicles.push(newVehicle);
+           populateVehiclesList();
+       }
+
+       // Delete vehicle
+       function deleteVehicle(index) {
+           if (vehicles.length <= 1) {
+               alert(t('cantDeleteLast'));
+               return;
+           }
+           
+           if (confirm(t('confirmDelete'))) {
+               vehicles.splice(index, 1);
+               populateVehiclesList();
+           }
+       }
+
+       // Close vehicle modal
+       function closeVehicleModal() {
+           document.getElementById('vehicle-modal').classList.remove('active');
+       }
+
+       // Save vehicle
+       function saveVehicle() {
+           // Collect data from form
+           const name = document.getElementById('vehicle-name').value;
+           if (!name) {
+               alert(t('vehicleNameRequired'));
+               return;
+           }
+           
+           const id = name.toLowerCase();
+           
+           // Get trailer status
+           const withTrailer = document.querySelector('input[name="vehicle-with-trailer"]:checked').value === 'yes';
+           const trailerCount = withTrailer ? 1 : 0;
+           
+           // Convert values to internal units
+           const weight = parseFloat(document.getElementById('vehicle-weight').value) * 1000; // t -> kg
+           const truckAxles = parseInt(document.getElementById('vehicle-truck-axles').value);
+           const trailerAxles = parseInt(document.getElementById('vehicle-trailer-axles').value);
+           const euroClass = document.getElementById('vehicle-euro-class').value;
+           const co2Class = document.getElementById('vehicle-co2-class').value;
+           const fuelConsumption = parseFloat(document.getElementById('vehicle-fuel-consumption').value);
+           const adblueConsumption = parseFloat(document.getElementById('vehicle-adblue-consumption').value);
+           const height = parseFloat(document.getElementById('vehicle-height').value) * 100; // m -> cm
+           const width = parseFloat(document.getElementById('vehicle-width').value) * 100; // m -> cm
+           const length = parseFloat(document.getElementById('vehicle-length').value) * 100; // m -> cm
+           const simpleCosts = document.getElementById('vehicle-simple-costs').checked;
+           const workingDays = parseInt(document.getElementById('vehicle-working-days').value);
+           const avgKm = parseInt(document.getElementById('vehicle-avg-km').value);
+           const advFixedPerMonth = parseInt(document.getElementById('vehicle-fixed-costs').value);
+           const advVariablePerKM = parseFloat(document.getElementById('vehicle-variable-costs').value);
+           const simpleCostValuePerKM = parseFloat(document.getElementById('vehicle-simple-cost-value').value);
+           
+           // Create vehicle object
+           const vehicle = {
+               id,
+               name,
+               weight,
+               truckAxles,
+               trailerAxles,
+               trailerCount,
+               euroClass,
+               co2Class,
+               fuelConsumption,
+               adblueConsumption,
+               height,
+               width,
+               length,
+               simpleCosts,
+               workingDays,
+               avgKm,
+               advFixedPerMonth,
+               advVariablePerKM,
+               simpleCostValuePerKM
+           };
+           
+           // Add or update vehicle
+           if (editingVehicleIndex === -1) {
+               vehicles.push(vehicle);
+           } else {
+               vehicles[editingVehicleIndex] = vehicle;
+           }
+           
+           // Close modal and refresh list
+           closeVehicleModal();
+           populateVehiclesList();
+       }
+
+       // Save fuel settings
+       function saveFuelSettings() {
+           // Collect values from form
+           companyCosts.useLowestFuelPrice = document.getElementById('cheapest-country').checked;
+           companyCosts.useCustomFuelPrices = document.getElementById('custom-prices').checked;
+           companyCosts.globalFuelPrice = parseFloat(document.getElementById('global-fuel-price').value);
+           companyCosts.globalAdBluePrice = parseFloat(document.getElementById('adblue-price').value);
+           
+           // Collect custom fuel prices
+           document.querySelectorAll('.fuel-price-input').forEach(input => {
+               const countryCode = input.dataset.country;
+               companyCosts.customFuelPrices[countryCode] = parseFloat(input.value);
+           });
+           
+           alert(t('settingsSaved'));
+       }
+
+       // Reset fuel settings
+       function resetFuelSettings() {
+           if (confirm(t('confirm'))) {
+               companyCosts = {
+                   useLowestFuelPrice: true,
+                   useCustomFuelPrices: false,
+                   globalFuelPrice: 1.35,
+                   globalAdBluePrice: 0.65,
+                   customFuelPrices: {...defaultFuelPrices}
+               };
+               
+               populateFuelPricesTable();
+               alert(t('settingsReset'));
+           }
+       }
+
+       // Save vehicles settings
+       function saveVehiclesSettings() {
+           alert(t('settingsSaved'));
+       }
+
+       // Reset vehicles settings
+       function resetVehiclesSettings() {
+           if (confirm(t('confirm'))) {
+               vehicles = [...defaultVehicles];
+               populateVehiclesList();
+               alert(t('settingsReset'));
+           }
+       }
+
+       // Helper function to get country name
+       function getCountryName(code) {
+           const countryNames = {
+               'POL': currentLang === 'pl' ? 'Polska' : (currentLang === 'de' ? 'Polen' : 'Poland'),
+               'DEU': currentLang === 'pl' ? 'Niemcy' : (currentLang === 'de' ? 'Deutschland' : 'Germany'),
+               'LUX': currentLang === 'pl' ? 'Luksemburg' : (currentLang === 'de' ? 'Luxemburg' : 'Luxembourg'),
+               'CZE': currentLang === 'pl' ? 'Czechy' : (currentLang === 'de' ? 'Tschechien' : 'Czech Republic'),
+               'SVK': currentLang === 'pl' ? 'Słowacja' : (currentLang === 'de' ? 'Slowakei' : 'Slovakia'),
+               'HUN': currentLang === 'pl' ? 'Węgry' : (currentLang === 'de' ? 'Ungarn' : 'Hungary'),
+               'AUT': currentLang === 'pl' ? 'Austria' : (currentLang === 'de' ? 'Österreich' : 'Austria'),
+               'ITA': currentLang === 'pl' ? 'Włochy' : (currentLang === 'de' ? 'Italien' : 'Italy'),
+               'FRA': currentLang === 'pl' ? 'Francja' : (currentLang === 'de' ? 'Frankreich' : 'France'),
+               'ESP': currentLang === 'pl' ? 'Hiszpania' : (currentLang === 'de' ? 'Spanien' : 'Spain'),
+               'PRT': currentLang === 'pl' ? 'Portugalia' : (currentLang === 'de' ? 'Portugal' : 'Portugal'),
+               'BEL': currentLang === 'pl' ? 'Belgia' : (currentLang === 'de' ? 'Belgien' : 'Belgium'),
+               'NLD': currentLang === 'pl' ? 'Holandia' : (currentLang === 'de' ? 'Niederlande' : 'Netherlands'),
+               'CHE': currentLang === 'pl' ? 'Szwajcaria' : (currentLang === 'de' ? 'Schweiz' : 'Switzerland'),
+               'DNK': currentLang === 'pl' ? 'Dania' : (currentLang === 'de' ? 'Dänemark' : 'Denmark'),
+               'SWE': currentLang === 'pl' ? 'Szwecja' : (currentLang === 'de' ? 'Schweden' : 'Sweden'),
+               'NOR': currentLang === 'pl' ? 'Norwegia' : (currentLang === 'de' ? 'Norwegen' : 'Norway'),
+               'FIN': currentLang === 'pl' ? 'Finlandia' : (currentLang === 'de' ? 'Finnland' : 'Finland'),
+               'EST': currentLang === 'pl' ? 'Estonia' : (currentLang === 'de' ? 'Estland' : 'Estonia'),
+               'LVA': currentLang === 'pl' ? 'Łotwa' : (currentLang === 'de' ? 'Lettland' : 'Latvia'),
+               'LTU': currentLang === 'pl' ? 'Litwa' : (currentLang === 'de' ? 'Litauen' : 'Lithuania'),
+               'ROU': currentLang === 'pl' ? 'Rumunia' : (currentLang === 'de' ? 'Rumänien' : 'Romania'),
+               'BGR': currentLang === 'pl' ? 'Bułgaria' : (currentLang === 'de' ? 'Bulgarien' : 'Bulgaria'),
+               'GRC': currentLang === 'pl' ? 'Grecja' : (currentLang === 'de' ? 'Griechenland' : 'Greece'),
+               'HRV': currentLang === 'pl' ? 'Chorwacja' : (currentLang === 'de' ? 'Kroatien' : 'Croatia'),
+               'SVN': currentLang === 'pl' ? 'Słowenia' : (currentLang === 'de' ? 'Slowenien' : 'Slovenia'),
+               'SRB': currentLang === 'pl' ? 'Serbia' : (currentLang === 'de' ? 'Serbien' : 'Serbia'),
+               'MKD': currentLang === 'pl' ? 'Macedonia Północna' : (currentLang === 'de' ? 'Nordmazedonien' : 'North Macedonia'),
+               'BIH': currentLang === 'pl' ? 'Bośnia i Hercegowina' : (currentLang === 'de' ? 'Bosnien und Herzegowina' : 'Bosnia and Herzegovina'),
+               'MNE': currentLang === 'pl' ? 'Czarnogóra' : (currentLang === 'de' ? 'Montenegro' : 'Montenegro'),
+               'ALB': currentLang === 'pl' ? 'Albania' : (currentLang === 'de' ? 'Albanien' : 'Albania')
+           };
+           
+           return countryNames[code] || code;
+       }
+
+       // Helper function to get country flag URL
+       function getCountryFlag(code) {
+           const countryToFlagCode = {
+               'POL': 'pl',
+               'DEU': 'de',
+               'LUX': 'lu',
+               'CZE': 'cz',
+               'SVK': 'sk',
+               'HUN': 'hu',
+               'AUT': 'at',
+               'ITA': 'it',
+               'FRA': 'fr',
+               'ESP': 'es',
+               'PRT': 'pt',
+               'BEL': 'be',
+               'NLD': 'nl',
+               'CHE': 'ch',
+               'DNK': 'dk',
+               'SWE': 'se',
+               'NOR': 'no',
+               'FIN': 'fi',
+               'EST': 'ee',
+               'LVA': 'lv',
+               'LTU': 'lt',
+               'ROU': 'ro',
+               'BGR': 'bg',
+               'GRC': 'gr',
+               'HRV': 'hr',
+               'SVN': 'si',
+               'SRB': 'rs',
+               'MKD': 'mk',
+               'BIH': 'ba',
+               'MNE': 'me',
+               'ALB': 'al'
+           };
+
+           const flagCode = countryToFlagCode[code] || code.toLowerCase();
+           return `https://flagcdn.com/w20/${flagCode.toLowerCase()}.png`;
+       }
+   </script>
+</body>
+</html>
